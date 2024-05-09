@@ -1,0 +1,4 @@
+The automaton provided in the task is not deterministic because it has e-transitions,
+which make any automaton non-deterministic by allowing the possibility of different state sequences for identical input strings.
+In order to determinise given automaton we must get rid of e-tranistions without changing the accepted language, which in fact can be represented as the following regex: (xz)*(x|y)
+I'll be using NFA to DFA conversion (look nfa_to_dfa.png to see the results)
