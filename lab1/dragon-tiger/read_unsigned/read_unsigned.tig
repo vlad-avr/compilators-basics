@@ -1,0 +1,27 @@
+let
+    function read_unsigned() : int =
+    let
+        var num := 0
+        var c := ""
+
+        function is_digit(n: string) : int =
+            ord(n) >= ord("0") & ord(n) <= ord("9")
+        
+        function is_end(n: string) : int =
+            if ord(n) = ord("\n")
+            then 1
+            else 0
+
+    in
+        while num <> -1 do
+            (c := getchar();
+            if is_end(c) <> 0 then break
+            else if is_digit(c) <> 0 then num := num * 10 + ord(c) - ord("0")
+            else num := -1);
+        num
+    end
+    var a : int := read_unsigned()
+in
+    print_int(a);
+    print("\n")
+end
