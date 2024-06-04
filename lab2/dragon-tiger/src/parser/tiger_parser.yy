@@ -91,7 +91,7 @@ using utils::nl;
 %type <Decl *> decl funcDecl varDecl;
 %type <std::vector<Decl *>> decls;
 %type <Expr *> expr intExpr stringExpr seqExpr callExpr opExpr negExpr
-            assignExpr whileExpr forExpr breakExpr letExpr var;
+            assignExpr whileExpr forExpr breakExpr letExpr var IfThenExpr IfThenElseExpr;
 
 %type <std::vector<Expr *>> exprs nonemptyexprs;
 %type <std::vector<Expr *>> arguments nonemptyarguments;
@@ -108,6 +108,9 @@ using utils::nl;
 %left PLUS MINUS;
 %left TIMES DIVIDE;
 %left UMINUS;
+
+%nonassoc IF THEN;
+%nonassoc ELSE;
 
 // Declare grammar rules and production actions
 
@@ -132,6 +135,8 @@ expr: stringExpr { $$ = $1; }
    | forExpr { $$ = $1; }
    | breakExpr { $$ = $1; }
    | letExpr { $$ = $1; }
+   | IfThenExpr { $$ = $1; }
+   | IfThenElseExpr { $$ = $1; }
 ;
 
 varDecl: VAR ID typeannotation ASSIGN expr
@@ -189,6 +194,13 @@ opExpr: expr PLUS expr   { $$ = new BinaryOperator(@2, $1, $3, o_plus); }
       }
 ;
 
+IfThenExpr: IF expr THEN expr
+  { $$ = new IfThenElse(@1, $2, $4, new Sequence(@4, std::vector<Expr *>())); }
+;
+
+IfThenElseExpr: IF expr THEN expr ELSE expr
+  { $$ = new IfThenElse(@1, $2, $4, $6); }
+;
 
 assignExpr: ID ASSIGN expr
   { $$ = new Assign(@2, new Identifier(@1, $1), $3); }
