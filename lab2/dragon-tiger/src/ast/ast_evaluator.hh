@@ -4,35 +4,48 @@
 #include "../utils/errors.hh"
 #include "nodes.hh"
 
-namespace ast{
-    class ASTEvaluator: public ConstASTIntVisitor{
-        int32_t visit(const class IntegerLiteral & l){
+namespace ast
+{
+    class ASTEvaluator : public ConstASTIntVisitor
+    {
+        int32_t visit(const class IntegerLiteral &l)
+        {
             return l.value;
         }
 
-        int32_t visit(const class Sequence & s){
-            std::vector<ast::types::Expr*> exprs = s.get_exprs();
+        int32_t visit(const class Sequence &s)
+        {
+            std::vector<ast::types::Expr *> exprs = s.get_exprs();
 
-            if(exprs.empty()){ utils::error("empty sequence");}
+            if (exprs.empty())
+            {
+                utils::error("empty sequence");
+            }
 
             int32_t res = 0;
-            for(Expr* expr : exprs){
+            for (Expr *expr : exprs)
+            {
                 res = expr->accept(*this);
             }
             return res;
         }
 
-        int32_t visit(const class IfThenElse & ifthel){
+        int32_t visit(const class IfThenElse &ifthel)
+        {
             int32_t res = -1;
-            if(ifthel.get_condition().accept(*this)){
+            if (ifthel.get_condition().accept(*this))
+            {
                 res = ifthel.get_then_part().accept(*this);
-            }else{
+            }
+            else
+            {
                 res = ifthel.get_else_part().accept(*this);
             }
             return res;
         }
 
-        int32_t visit(const class BinaryOperator & op){
+        int32_t visit(const class BinaryOperator &op)
+        {
             switch (op.op)
             {
             case o_plus:
@@ -69,7 +82,47 @@ namespace ast{
                 utils::error("uknown operator");
             }
         }
-    }
+        int32_t visit(const class StringLiteral &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class Let &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class Identifier &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class VarDecl &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class FunDecl &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class FunCall &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class WhileLoop &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class ForLoop &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class Break &)
+        {
+            utils::error("Not implemented");
+        }
+        int32_t visit(const class Assign &)
+        {
+            utils::error("Not implemented");
+        }
+    };
 }
 
 #endif
